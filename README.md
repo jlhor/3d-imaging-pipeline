@@ -10,4 +10,5 @@ The current supported image format is Imaris file (`.ims`), with limited support
 
 Cell segmentation module additionally requires the installation of [StarDist](https://github.com/stardist/stardist) package, preferably with GPU support enabled to accelerate prediction step. The subsequent CPU-intensive non-maximal suppression and labeling steps have been modified to be executed on the HPC cluster.
 
+**Instructions for [Segmentation](segmentation/segmentation.md)**
 
