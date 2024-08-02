@@ -1,5 +1,7 @@
 # 3D Image Processing and Analysis Pipeline
 
+<img src="./doc/3d_pipeline_front.png" width="75%" height="75%"/>
+
 This pipeline leverages the NIH Biowulf High-Performing Computation (HPC) cluster for distributed processing of large volumetric 3D imaging datasets. The current workflow is optimized for SLURM-based scheduling system, with effort in porting to cloud-based service (e.g. Amazon AWS) currently ongoing.
 
 ## Requirements:
