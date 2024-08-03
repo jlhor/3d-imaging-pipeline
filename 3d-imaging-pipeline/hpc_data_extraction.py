@@ -28,7 +28,6 @@ def trim_memory() -> int:
     return libc.malloc_trim(0)
 
 
-
 def initialization(config):
     
     input_prefix = os.path.join(config['ProjectPath'],config['InputDir'],  config['InputPrefix'])
@@ -162,8 +161,19 @@ def run(config_path):
     
     out_filename = config['OutputFile']
     
-    np.save(f'{output_prefix}_{out_filename}', extracted_array)
+    output_path = f'{output_prefix}_{out_filename}.h5'
+    
+    print('Converting data to h5')
+    print(f'Output location: {output_path}')
+    
+    chunk_rows=5000
+    with h5py.File(output_path, mode='w') as f:
+        ds_dist = f.create_dataset("extracted_data", shape=extracted_array.shape, chunks=(extracted_array.shape[0], chunk_rows, extracted_array.shape[2]), dtype=extracted_array.dtype)
+        ds_dist[...] = dist[...]
 
+    print('Removing temporary directory')
+    temp_dir.cleanup()
+    
     print('End of script')
     
 if __name__ == '__main__':
