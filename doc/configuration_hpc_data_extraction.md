@@ -20,7 +20,9 @@
 | `BlockShape ` | Block shape in (`z, y, x`) for pre-processing steps. The entire `z` dimension of the image will be used automatically, so set to `0` here. |
 | `{task}_BatchSize` |  Batch size for each {task} to be handled by each node |
 | | |
-| `MaskGaussianSigma` |  The sigma value for Gaussian filtering to be applied after mask generation to create a weighted gradient that emphasizes the core of the masks. Default is `1.0` pixel |
+| `MaskDilation` |  The morphological dilation footprint to be applied to the generated masks, which is required to cover the membrane/cytoplasmic regions of the cell if the initial segmentation was performed on nuclear stains. Default is `6.0` pixel. |
+| `MaskErosion` |  (Optional) The morphological erosion footprint to be applied to the generated masks, where a slight erosion is applied to the initial (nuclear) mask to yield a slightly larger membrane/cytoplasmic mask, which are then additionally filtered with a Gaussian kernel to create lighter gradient near the edges. The membrane/cytoplasmic mask is created by the subtraction of the eroded mask from the dilated mask. Default is `3.0` pixel. |
+| `MaskGaussianSigma` |  The sigma value for Gaussian filtering to be applied after mask generation to create a weighted gradient that emphasizes the core of the masks. Default is `1.0` pixel. Set to `0` to skip this step. |
 | | |
 | DASK | |
 | `cluster_mode` | Currently only `SLURM` is supported. |
