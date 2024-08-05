@@ -21,10 +21,10 @@ Note that this requires setting up a Conda-based environment in both the local w
 
 ### Step 2: CPU prediction and labeling step
 
-1. Copy the `prediction_output.h5` file to the HPC, together with the directory of the trained model. The image file is not needed from this point onward.
-2. Configure the `hpc_template.yaml` file, by specifying the location of the `prediction_output.h5` file and the directory containing the trained model.
-   Set the number of cluster (compute nodes) to request as needed.
-4. Configure the `jobscript_template.sh` to run `python hpc_prediction.py hpc_template.yaml` on a SLURM scheduler.
-5. The output `prediction_label.h5` file containing the individual segmented cell masks/labels will be generated and can be used for downstream applications.
+1. Copy the `probabilities.h5` file to the `output` directory of the project on the HPC, together with the directory of the trained model to the `models` sub-directory. The image file is not needed from this point onward.
+2. Configure the `hpc_prediction_template.yaml` file, by specifying the location of the `probabilities.h5` file and the directory containing the trained model. Set the number of cluster (compute nodes) to request as needed.   
+   Typically, editing of the configuration file is not required. However, adjusting the number of nodes to request, the number of CPUs and memory may be required depending on the HPC infrastructure of the institution. For details on the configuration parameters, see the [instructions](doc/configuration_hpc_prediction.md) here.
+4. Configure the `jobscript_template.sh` to run `python hpc_prediction.py hpc_prediction_template.yaml` on a SLURM scheduler.
+5. The output `prediction.h5` file containing the individual segmented cell masks/labels will be generated and can be used for downstream applications.
 
 Note: the output label file is a 32-bit array that often contains many more cells than the maximum bit-depth of a 16-bit image (65535) and should not be converted into a 16-bit image as all the segmented cell objects above the max bit-depth value will be lost. It is important that the subsequent processing and analysis steps do not inadvertently convert the array to a lower bit-depth (e.g. 8 or 16-bit).
