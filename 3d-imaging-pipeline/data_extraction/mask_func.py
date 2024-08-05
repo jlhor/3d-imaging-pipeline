@@ -30,17 +30,19 @@ def func_subtraction(img1, img2):
     return img1-img2
 
 
-def mask_functions(f, block_size, read_block):
+def mask_functions(f, block_size, read_block, footprints):
+
+    d_fp, e_fp = footprints
     
     out_blocks = np.zeros((4, read_block.shape[0], read_block.shape[1], read_block.shape[2]), dtype=read_block.dtype)
     
     out_blocks[0,:,:,:] = read_block[:,:,:]
     
     ## dilation -> write
-    out_blocks[1,:,:,:] = func_dilation(read_block, footprint=6)
+    out_blocks[1,:,:,:] = func_dilation(read_block, footprint=d_fp)
     
     ## erosion -> write
-    out_blocks[2,:,:,:] = func_erosion(read_block, footprint=3)
+    out_blocks[2,:,:,:] = func_erosion(read_block, footprint=e_fp)
     
     ## subtraction -> write
     out_blocks[3,:,:,:] = func_subtraction(out_blocks[1,:,:,:], out_blocks[2,:,:,:])

@@ -102,7 +102,8 @@ def save_coords_tile(i, grp, label_path, block_xy, block_shape, block_size):
 def coords_tiling(config, coords_params, mode='read'):
 
     
-    dask_config = { 'processes'          : config['DASK']['TILING']['processes'], 
+    dask_config = { 'cluster_size'          : config['DASK']['TILING']['cluster_size'],
+                    'processes'          : config['DASK']['TILING']['processes'], 
                     'cores'              : config['DASK']['TILING']['cores'], 
                     'memory'             : config['DASK']['TILING']['memory'],
                     'walltime'           : config['DASK']['TILING']['walltime'], 
@@ -117,19 +118,18 @@ def coords_tiling(config, coords_params, mode='read'):
     batch_shape = coords_params['batch_shape'] 
     block_size = coords_params['block_size'] 
     
-    coords_file = config['TempCoordsFile']
     
     temp_dir = config['temp_dir'].name
     
     if mode == 'write':
-        zarr_grp = zarr.open_group(f'{temp_dir}/{coords_file}', mode='w')
+        zarr_grp = zarr.open_group(f'{temp_dir}/coords.zarr', mode='w')
         grps = []
         for i in range(len(tile_id)):
             grps.append(zarr_grp.create_group(f'tile_{i}'))
         
         print('Initiating cluster')
         
-        CLUSTER_SIZE = dask_config['cluster_size_tiling']
+        CLUSTER_SIZE = dask_config['cluster_size']
         cluster=create_cluster(mode=cluster_mode, config=dask_config)
         client = Client(cluster)
         
@@ -177,7 +177,7 @@ def coords_tiling(config, coords_params, mode='read'):
     
     elif mode == 'read':
         
-        zarr_grp = zarr.open_group(f'{temp_dir}/{coords_file}', mode='r')
+        zarr_grp = zarr.open_group(f'{temp_dir}/coords.zarr', mode='r')
         
         #unsorted_grps = list(zarr_grp.group_keys())
         

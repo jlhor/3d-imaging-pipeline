@@ -28,7 +28,8 @@ def trim_memory() -> int:
 def labeling(data_path, params, config, cluster_config):
     
     shape_inst, out_inds, rays = params
-    output_prefix = os.path.join(config['ProjectPath'],config['OutputDir'],  config['OutputPrefix'])
+    #output_dir = os.path.join(config['ProjectPath'],config['OutputDir'])
+    temp_dir = config['temp_dir']
     zarr_chunks = config['ZarrChunks']
     dask_config, cluster_mode = cluster_config
     BATCH_SIZE = config['LabelingBatchSize']
@@ -61,7 +62,7 @@ def labeling(data_path, params, config, cluster_config):
 
     compressor = Blosc(cname='zstd', clevel=5, shuffle=Blosc.BITSHUFFLE)
 
-    result = zarr.open(f'{output_prefix}_result_full.zarr', 'w', shape=shape_inst, chunks=[shape_inst[0],zarr_chunks[1],zarr_chunks[2]], dtype=np.int32, compressor=compressor)
+    result = zarr.open(f'{temp_dir}/prediction_full.zarr', 'w', shape=shape_inst, chunks=[shape_inst[0],zarr_chunks[1],zarr_chunks[2]], dtype=np.int32, compressor=compressor)
     result[...] = 0
     
     batch_idx = np.arange(0, len(pointsc), BATCH_SIZE)
@@ -141,12 +142,7 @@ def labeling(data_path, params, config, cluster_config):
     ###
     print('Converting array to numpy')
     result_arr = np.array(result, dtype=result.dtype)
-    
-    print('Saving array to H5')
-    
-    with h5py.File(f'{output_prefix}_result.h5', 'w') as h5_result:
-        h5_result.create_dataset('data', data=result_arr, chunks=True, compression="gzip")   
-    
+ 
 
-    return True
+    return result_arr
 

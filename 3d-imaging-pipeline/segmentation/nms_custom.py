@@ -49,7 +49,6 @@ def nms(data_path, params, coords, config, cluster_config):
     shape_inst, rays, nms_thresh = params
     dask_config, cluster_mode = cluster_config
     temp_dir = config['temp_dir'].name
-    output_prefix = os.path.join(config['ProjectPath'],config['OutputDir'],  config['OutputPrefix'])
     BATCH_SIZE = config['NMSBatchSize']
     
     with h5py.File(data_path, mode='r') as data:
@@ -128,7 +127,7 @@ def nms(data_path, params, coords, config, cluster_config):
     nms_out_combined = np.array(nms_out_combined)
     out_inds = np.unique(nms_out_combined)
     
-    np.save(f'{output_prefix}_out_inds', out_inds)
+    np.save(f'{temp_dir}/out_inds', out_inds)
     
     return out_inds
 

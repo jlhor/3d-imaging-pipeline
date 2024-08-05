@@ -29,27 +29,23 @@ def trim_memory() -> int:
 
 
 def initialization(config):
-    
-    input_prefix = os.path.join(config['ProjectPath'],config['InputDir'],  config['InputPrefix'])
-    output_prefix = os.path.join(config['ProjectPath'],config['OutputDir'],  config['InputPrefix'])
+
+    output_dir = os.path.join(config['ProjectPath'],config['OutputDir'])
     block_shape = config['BlockShape']
     
+    prediction_filename = config['PredictionFileName']
+    
     print('Loading data from h5')
-    label_path = f'{output_prefix}_result.h5'
+    label_path = f'{output_dir}/{prediction_filename}'
     print(label_path)
     
-    data_path = f'{input_prefix}_data.h5'
-    
-    with h5py.File(data_path, 'r') as data_file:
-        shape_inst = data_file['shape_inst']
-        shape_inst = tuple(shape_inst)
 
     with h5py.File(label_path, 'r') as label_file:    
         predicted = label_file['data']
+        shape_inst = label_file['shape_inst']
+        shape_inst = tuple(shape_inst)
         
         batch_shape = [shape_inst[0],block_shape[1], block_shape[2]]
-        
-        #block_shape = (144,1000,1000)
     
         block_size = []
         for n in range(3):
@@ -102,7 +98,7 @@ def run(config_path):
 
     config = read_yaml(config_path)
     
-    output_prefix = os.path.join(config['ProjectPath'],config['OutputDir'],  config['OutputPrefix'])
+    output_dir = os.path.join(config['ProjectPath'],config['OutputDir'])
 
     temp_dir = tempfile.TemporaryDirectory(prefix='.', dir=os.path.join(config['ProjectPath'],config['TempDir']))
     config['temp_dir'] = temp_dir
@@ -145,10 +141,10 @@ def run(config_path):
         
         print('Saving files')
         
-        np.save(f'{output_prefix}_extents', extents_full)
+        np.save(f'{temp_dir}/extents', extents_full)
             
     else:
-        extents_full = np.load(f'{output_prefix}_extents.npy')
+        extents_full = np.load(f'{temp_dir}/extents.npy')
     
 
     ###################################################
@@ -161,7 +157,7 @@ def run(config_path):
     
     out_filename = config['OutputFile']
     
-    output_path = f'{output_prefix}_{out_filename}.h5'
+    output_path = f'{output_dir}/{out_filename}'
     
     print('Converting data to h5')
     print(f'Output location: {output_path}')
@@ -169,9 +165,9 @@ def run(config_path):
     chunk_rows=5000
     with h5py.File(output_path, mode='w') as f:
         ds_dist = f.create_dataset("extracted_data", shape=extracted_array.shape, chunks=(extracted_array.shape[0], chunk_rows, extracted_array.shape[2]), dtype=extracted_array.dtype)
-        ds_dist[...] = dist[...]
+        ds_dist[...] = extracted_array[...]
 
-    print('Removing temporary directory')
+    print('Removing temporary files')
     temp_dir.cleanup()
     
     print('End of script')

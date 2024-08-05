@@ -17,7 +17,8 @@ from tiling import read_coords_tile
 
 def get_extents_setup(tile_labels, batch_size, config):
     
-    dask_config = { 'processes'          : config['DASK']['EXTENTS']['processes'], 
+    dask_config = { 'cluster_size'          : config['DASK']['EXTENTS']['cluster_size'],
+                    'processes'          : config['DASK']['EXTENTS']['processes'], 
                     'cores'              : config['DASK']['EXTENTS']['cores'], 
                     'memory'             : config['DASK']['EXTENTS']['memory'],
                     'walltime'           : config['DASK']['EXTENTS']['walltime'], 
@@ -38,7 +39,7 @@ def get_extents_setup(tile_labels, batch_size, config):
     print('Initiating cluster')
     print(f'future_batch: {len(future_batch)}')
     
-    CLUSTER_SIZE = dask_config['cluster_size_tiling']
+    CLUSTER_SIZE = dask_config['cluster_size']
     cluster=create_cluster(mode=cluster_mode, config=dask_config)
     client = Client(cluster)
     

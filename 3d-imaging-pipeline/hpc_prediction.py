@@ -33,12 +33,15 @@ def run(config_path):
     
     model_name = config['ModelName']
     model_basedir = os.path.join(config['ProjectPath'], config['ModelDir'])
-    output_prefix = os.path.join(config['ProjectPath'],config['OutputDir'],  config['OutputPrefix'])
+    output_dir = os.path.join(config['ProjectPath'],config['OutputDir'])
     block_shape = config['BlockShape']
-    input_prefix = os.path.join(config['ProjectPath'],config['InputDir'],  config['InputPrefix'])
-    #temp_dir = os.path.join(config['ProjectPath'],config['TempDir'])
+    input_dir = os.path.join(config['ProjectPath'],config['InputDir'])
+    prob_filename = config['ProbabilitiesFileName']
+    out_filename = config['PredictionFileName']  
     
     temp_dir = tempfile.TemporaryDirectory(prefix='.', dir=os.path.join(config['ProjectPath'],config['TempDir']))
+    
+    
     
     config['temp_dir'] = temp_dir
     
@@ -54,7 +57,7 @@ def run(config_path):
 
     ## Load from h5
     print('Loading data from h5')
-    data_path = f'{input_prefix}_data.h5'
+    data_path = f'{input_dir}/{prob_filename}'
     print(data_path)
 
     with h5py.File(data_path, mode='r') as data:
@@ -115,7 +118,7 @@ def run(config_path):
                        )
     else:
         print('Loading NMS data')
-        out_inds = np.load(f'{output_prefix}_out_inds.npy')
+        out_inds = np.load(f'{temp_dir}/out_inds.npy')
     
     print('Labeling:')
     labeling_out = labeling(data_path=data_path,
@@ -123,7 +126,13 @@ def run(config_path):
                             config=config,
                             cluster_config=[dask_config, cluster_mode])
     
+    print('Saving array to H5')
     
+    with h5py.File(f'{output_dir}/{out_filename}', 'w') as h5_result:
+        h5_result.create_dataset('data', data=labeling_out, chunks=True, compression="gzip") 
+        h5_result.create_dataset("shape_inst", data=np.array(shape_inst))
+        
+        
     ###############################################################
     ###############################################################
 

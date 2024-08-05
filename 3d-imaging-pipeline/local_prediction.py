@@ -39,6 +39,7 @@ def run(config_path):
     model_basedir = os.path.join(config['ProjectPath'], config['ModelDir'])
     output_prefix = os.path.join(config['ProjectPath'],config['OutputDir'],  config['OutputPrefix'])
     block_shape = config['BlockShape']
+    output_filename = config['OutputFileName']
     
 
     print(f'StarDist3D prediction for {project_name}')
@@ -90,7 +91,7 @@ def run(config_path):
     
     
     print('Converting data to h5')
-    data_path = convert_to_h5(f'{output_prefix}_data.h5', 
+    data_path = convert_to_h5(f'{output_prefix}_{output_filename}.h5', 
                   data=[dist, prob, points, np.array(_shape_inst)],
                   chunk_rows=5000)
     

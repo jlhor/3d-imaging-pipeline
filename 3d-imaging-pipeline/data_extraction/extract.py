@@ -59,9 +59,10 @@ def extract_values_by_channels(f, batch_size, block_size, im1_block, im2_block, 
 def extract_contexts_filtered(f, future_rows, patch_params, filter_id, tile_labels, image_path, channels, batch_size, config):
 
     temp_dir = config['temp_dir'].name
-    coords_file = config['TempCoordsFile']
-    coords_path = f'{temp_dir}/{coords_file}'
+    coords_path = f'{temp_dir}/coords.zarr'
     
+    mask_dilation = config['MaskDilation']
+    mask_erosion = config['MaskErosion']
     mask_sigma = config['MaskGaussianSigma']
     
     block_size = patch_params['block_size']
@@ -148,13 +149,16 @@ def extract_contexts_filtered(f, future_rows, patch_params, filter_id, tile_labe
                             contexts_block[block_ch[c], :, :, block_size[2]*i:block_size[2]*(i+1)] = temp_image[...]
                         
     ### generate masks
-    masks_block = mask_functions(f, block_size, masks_block)
+    masks_block = mask_functions(f, block_size, masks_block, footprints=[mask_dilation, mask_erosion])
     
     masks_block_gaus = np.zeros_like(masks_block, dtype=float)
     ## gaussian filtering masks
-    for b in range(masks_block.shape[0]):
-        for z in range(masks_block.shape[1]):
-            masks_block_gaus[b, z, ...] = gaussian(masks_block[b][z], sigma=mask_sigma)
+    if mask_sigma > 0:
+        for b in range(masks_block.shape[0]):
+            for z in range(masks_block.shape[1]):
+                masks_block_gaus[b, z, ...] = gaussian(masks_block[b][z], sigma=mask_sigma)
+        else:
+            masks_block_gaus = masks_block
     
     
     mask_channels = np.arange(masks_block_gaus.shape[0])
@@ -173,7 +177,8 @@ def extract_contexts_filtered(f, future_rows, patch_params, filter_id, tile_labe
 
 def process_tiles_and_get_values(tile_labels, max_labels, patch_params, config):
     
-    dask_config = { 'processes'          : config['DASK']['EXTRACTION']['processes'], 
+    dask_config = { 'cluster_size'       : config['DASK']['EXTRACTION']['cluster_size'], 
+                    'processes'          : config['DASK']['EXTRACTION']['processes'], 
                     'cores'              : config['DASK']['EXTRACTION']['cores'], 
                     'memory'             : config['DASK']['EXTRACTION']['memory'],
                     'walltime'           : config['DASK']['EXTRACTION']['walltime'], 
@@ -186,8 +191,8 @@ def process_tiles_and_get_values(tile_labels, max_labels, patch_params, config):
     if not isinstance(ims_path, list):
         ims_path = [ ims_path ]
     
-    input_prefix = os.path.join(config['ProjectPath'],config['InputDir'])
-    img_path = [ f'{input_prefix}/{x}' for x in ims_path ]
+    input_dir = os.path.join(config['ProjectPath'],config['InputDir'])
+    img_path = [ f'{input_dir}/{x}' for x in ims_path ]
     
 
     cell_id = np.arange(max_labels)    
@@ -211,7 +216,7 @@ def process_tiles_and_get_values(tile_labels, max_labels, patch_params, config):
         future_rows = np.append(future_rows, max_labels)
     
     
-    CLUSTER_SIZE = dask_config['cluster_size_tiling']
+    CLUSTER_SIZE = dask_config['cluster_size']
     cluster=create_cluster(mode=cluster_mode, config=dask_config)
     client = Client(cluster)
     
