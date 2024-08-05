@@ -1,0 +1,51 @@
+
+
+ProjectPath: "/data/Image01"
+InputDir: "input"
+InputImage: [ "Image1a.ims", "Image1b.ims" ]
+Channels: [[0, 1, 2, 3, 4, 5, 6],[0,1,2]]
+
+PredictionFileName: 'M1_prediction.h5'
+
+OutputDir: "output"
+OutputFile: "M1_output_array.h5"
+
+TempDir: "temp"
+
+SaveCoordsMode: True
+SaveExtentMode: True
+
+BlockShape: [0, 1000, 1000]
+ExtentBatchSize: 5000
+ExtractionBatchSize: 1000
+
+MaskDilation: 6.0
+MaskErosion: 3.0
+MaskGaussianSigma: 1.0
+
+DASK:
+    cluster_mode: 'SLURM'
+
+    TILING:
+        cluster_size: 72
+        cores: 8
+        processes: 1
+        memory: '24GB'
+        walltime: '24:00:00'
+        cpu_type: 'x2695'
+        
+    EXTENTS:
+        cluster_size: 72
+        cores: 16
+        processes: 1
+        memory: '24GB'
+        walltime: '24:00:00'
+        cpu_type: 'x2695'
+    
+    EXTRACTION:
+        cluster_size: 128
+        cores: 28
+        processes: 1
+        memory: '128GB'
+        walltime: '2-0:00:00'
+        cpu_type: 'x2695'
