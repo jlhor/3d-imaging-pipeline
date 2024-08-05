@@ -1,4 +1,4 @@
-##  Configuration for HPC predictions step:
+##  Configuration for HPC prediction step:
    
 
 | Settings | description |
