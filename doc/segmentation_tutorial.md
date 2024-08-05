@@ -23,7 +23,7 @@ Note that this requires setting up a Conda-based environment in both the local w
 
 1. Copy the `probabilities.h5` file to the `output` directory of the project on the HPC, together with the directory of the trained model to the `models` sub-directory. The image file is not needed from this point onward.
 2. Configure the `hpc_prediction_template.yaml` file, by specifying the location of the `probabilities.h5` file and the directory containing the trained model. Set the number of cluster (compute nodes) to request as needed.   
-   Typically, editing of the configuration file is not required. However, adjusting the number of nodes to request, the number of CPUs and memory may be required depending on the HPC infrastructure of the institution. For details on the configuration parameters, see the [instructions](doc/configuration_hpc_prediction.md) here.
+   Typically, editing of the configuration file is not required. However, adjusting the number of nodes to request, the number of CPUs and memory may be required depending on the HPC infrastructure of the institution. For details on the configuration parameters, see the [instructions](./configuration_hpc_prediction.md) here.
 4. Configure the `jobscript_template.sh` to run `python hpc_prediction.py hpc_prediction_template.yaml` on a SLURM scheduler.
 5. The output `prediction.h5` file containing the individual segmented cell masks/labels will be generated and can be used for downstream applications.
 
