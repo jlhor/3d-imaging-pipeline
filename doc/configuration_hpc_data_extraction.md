@@ -12,7 +12,8 @@
 | `OutputDir` | Output sub-directory inside project path   |
 | `OutputFilePrefix` | The name for the **output** array containing all the extracted values from each channel (default is mean intensity, user-defined functions can be used to extract other types of information). Do not include the file extension. |
 | | |
-| `CellCoordinates` | The output cell coordinate type (`world` coordinates will be scaled with the voxel dimensions (µm), otherwise the coordinates will be given in image positions (voxel coordinates) |
+| `CellCoordinates` | The output cell coordinate type (if set to `'world'`, coordinates will be scaled with the voxel dimensions (µm), otherwise the coordinates will be given in image positions (voxel coordinates) |
+| `VoxelDimensions` | Voxel dimensions in X, Y, Z. Provide in list `[x, y, z]` or **(Imaris only)** set to `auto` to automatically retrieve the voxel dimensions from the Imaris image file |
 | `OutputCSV` | Set to `True` for output array to be exported as `.csv` format (as multiple 2D data arrays) as well. |
 | | |
 | `TempDir` | Temporary directory where intermediate files are generated. Cleaned up automatically if the script runs to completion. |
