@@ -242,6 +242,8 @@ def process_tiles_and_get_values(tile_labels, max_labels, patch_params, config):
 
     cell_id = np.arange(max_labels)    
     context_channels = config['Channels']
+    
+    ch_name_type = config['ChannelNames']
      
     block_ch = list(np.arange(len([ x for y in context_channels for x in y])))
     
@@ -249,7 +251,11 @@ def process_tiles_and_get_values(tile_labels, max_labels, patch_params, config):
     img_dimensions, vxl_dimensions = get_dimensions(img_path)
     
     ### get channel names
-    ch_names = get_channel_names(img_path, context_channels)
+    if ch_name_type == 'auto':
+        ch_names = get_channel_names(img_path, context_channels)
+    else:
+        if isinstance(ch_name_type, list):
+            ch_names = ch_name_type
     
     
     print(f'Image path: {img_path}')
