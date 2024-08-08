@@ -18,3 +18,19 @@ The output array will comprise the mean intensity values of four separate masks:
    For details on the configuration parameters, see the [instructions](/doc/configuration_hpc_data_extraction.md) here.
 5. Configure the `jobscript_data_extraction.sh` to run `python hpc_data_extraction.py hpc_data_extraction_template.yaml` on a SLURM scheduler.
 6. The `output_array.h5` file containing the extracted channels will be generated in `output` sub-directory for subsequent analyses.
+
+## Output array
+The output array will be exported in a HDF5 container (`.h5`) with multiple 2D `pandas` dataframe that can be retrived with the appropriate keys using the following command: `pandas.read_hdf('output_array.h5', key='nuclear')`
+
+The keys for the datasets are as follows:
+| Key | Description |
+| -- | -- |
+| `positions` |  X, Y, Z coordinates for each cell (Conversion from image coordinates to world coordinates can be set in the configuration file) |
+| `nuclear` | Mean intensity extracted from each channel based on the nuclear mask of the cell |
+| `membrane` | Mean intensity extracted from each channel based on the membrane/cytoplasmic mask of the cell |
+| `cell` | Mean intensity extracted from each channel based on the nuclear + membrane/cytoplasmic mask of the cell |
+| `eroded` | Mean intensity extracted from each channel based on the eroded nuclear mask of the cell |
+
+To export the cell coordinates as world coordinates (in µm scale), set `CellCoordinates` to `world` and `VoxelDimensions` can be defined as an `[X, Y, Z]` list, or set to `auto` to automatically retrieve the voxel dimensions from the image file (Imaris only).   
+
+To export the output arrays as `.csv` format, set `OutputCSV` to `True` in the configuration file.
