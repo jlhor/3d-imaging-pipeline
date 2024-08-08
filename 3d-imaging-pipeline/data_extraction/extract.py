@@ -38,6 +38,16 @@ def get_channel_names(img_path, channels):
     return ch_names
 
 
+def rename_duplicate_channels(channels):
+    for i, ch in enumerate(channels):
+        if channels.count(ch) > 1:
+            dup_idx = [ i for i,x in enumerate(channels) if x == ch]
+            for i, d in enumerate(dup_idx):
+                if i > 0:
+                    channels[d] = f'{ch}_{i}'
+                    
+    return channels
+
 def get_dimensions(img_path):
     
     dims = ['Z', 'Y', 'X']
@@ -257,6 +267,8 @@ def process_tiles_and_get_values(tile_labels, max_labels, patch_params, config):
         if isinstance(ch_name_type, list):
             ch_names = ch_name_type
     
+    ## check for duplicate channel names and rename
+    ch_names = rename_duplicate_channels(ch_names)
     
     print(f'Image path: {img_path}')
     print(f'Channels to process: {context_channels}')
