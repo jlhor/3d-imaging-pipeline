@@ -7,9 +7,13 @@
 | `InputDir` | Input sub-directory inside project path | 
 | `InputImage` | The input Imaris image files (`.ims`) to extract data from. To extract from more than one Imaris file, use a list e.g., `["Image1a.ims", "Image1b.ims"]`   |
 | `Channels` | Input channels to extract data from, in the exact order in the output array. For extracting from more than one Imaris file, define as sub-lists within a list. |
+| `ChannelNames` | Input channel names. Define a list that matches the total number of `Channels` for the channel names to be exported in the output array. **Imaris only:** set to `auto` to automatically retrieve channel names from Imaris datasets |
 |  |  |
 | `OutputDir` | Output sub-directory inside project path   |
-| `OutputFile` | The **output** array containing all the extracted values from each channel (default is mean intensity, user-defined functions can be used to extract other types of information) |
+| `OutputFilePrefix` | The name for the **output** array containing all the extracted values from each channel (default is mean intensity, user-defined functions can be used to extract other types of information). Do not include the file extension. |
+| | |
+| `CellCoordinates` | The output cell coordinate type (`world` coordinates will be scaled with the voxel dimensions (µm), otherwise the coordinates will be given in image positions (voxel coordinates) |
+| `OutputCSV` | Set to `True` for output array to be exported as `.csv` format (as multiple 2D data arrays) as well. |
 | | |
 | `TempDir` | Temporary directory where intermediate files are generated. Cleaned up automatically if the script runs to completion. |
 | | |
