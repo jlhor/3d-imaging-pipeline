@@ -165,8 +165,22 @@ def run(config_path):
     output_prefix = config['OutputFilePrefix']
     return_csv = config['OutputCSV']
     coords_type = config['CellCoordinates']
+    vxl_type = config['VoxelDimensions']
+    
+    
+    ## override voxel dimensions with user defined list
+    if isinstance(vxl_type, list):
+        if len(vxl_type) == 3:
+            vxl_dims = np.array(vxl_type)[::-1].astype(float)  # reverse from xyz to zyx
+            print(f'Voxel dimensions: user defined {vxl_dims[::-1]}')
+    elif vxl_type == 'auto':
+        print(f'Voxel dimensions: auto from image file {vxl_dims[::-1]}')
+    else:
+        vxl_dims = np.array([1.0, 1.0, 1.0]).astype(float)
+        print(f'Voxel dimensions data not provided: using default {vxl_dims}')
     
     output_path = f'{output_dir}/{output_prefix}'
+    
     
     print('Converting data to h5')
     print(f'Output location: {output_path}')

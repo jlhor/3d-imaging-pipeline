@@ -13,6 +13,7 @@ OutputDir: "output"
 OutputFilePrefix: "M1_output_array"
 
 CellCoordinates: 'world'
+VoxelDimensions: 'auto'
 OutputCSV: False
 
 TempDir: "temp"
