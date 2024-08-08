@@ -1,21 +1,21 @@
 ##  Configuration for HPC data extraction step:
 
-:red_circle: indicates parameters that may need to be changed between projects. All other parameters can be left as is.
+:eight_spoked_asterisk: indicates parameters that may need to be changed between projects. All other parameters can be left as is.
 
 | Settings | | description |
 | -- | -- | -- |
-| `ProjectPath` | :red_circle: | Root directory for the project on the HPC |   
+| `ProjectPath` | :eight_spoked_asterisk: | Root directory for the project on the HPC |   
 | `InputDir` | | Input sub-directory inside project path | 
-| `InputImage` | :red_circle: | The input Imaris image files (`.ims`) to extract data from. To extract from more than one Imaris file, use a list e.g., `["Image1a.ims", "Image1b.ims"]`   |
-| `Channels` | :red_circle: | Input channels to extract data from, in the exact order in the output array. For extracting from more than one Imaris file, define as sub-lists within a list. |
-| `ChannelNames` | :red_circle: | Input channel names. Define a list that matches the total number of `Channels` for the channel names to be exported in the output array. **Imaris only:** set to `auto` to automatically retrieve channel names from Imaris datasets |
+| `InputImage` | :eight_spoked_asterisk: | The input Imaris image files (`.ims`) to extract data from. To extract from more than one Imaris file, use a list e.g., `["Image1a.ims", "Image1b.ims"]`   |
+| `Channels` | :eight_spoked_asterisk: | Input channels to extract data from, in the exact order in the output array. For extracting from more than one Imaris file, define as sub-lists within a list. |
+| `ChannelNames` | :eight_spoked_asterisk: | Input channel names. Define a list that matches the total number of `Channels` for the channel names to be exported in the output array. **Imaris only:** set to `auto` to automatically retrieve channel names from Imaris datasets |
 |  |  |  |
 | `OutputDir` |  | Output sub-directory inside project path   |
-| `OutputFilePrefix` | :red_circle: |  The name for the **output** array containing all the extracted values from each channel (default is mean intensity, user-defined functions can be used to extract other types of information). Do not include the file extension. |
+| `OutputFilePrefix` | :eight_spoked_asterisk: |  The name for the **output** array containing all the extracted values from each channel (default is mean intensity, user-defined functions can be used to extract other types of information). Do not include the file extension. |
 | | | | 
-| `CellCoordinates` | :red_circle: |  The output cell coordinate type (if set to `'world'`, coordinates will be scaled with the voxel dimensions (µm), otherwise the coordinates will be given in image positions (voxel coordinates) |
-| `VoxelDimensions` | :red_circle: | Voxel dimensions in X, Y, Z. Provide in list `[x, y, z]` or **(Imaris only)** set to `auto` to automatically retrieve the voxel dimensions from the Imaris image file |
-| `OutputCSV` | :red_circle: | Set to `True` for output array to be exported as `.csv` format (as multiple 2D data arrays) as well. |
+| `CellCoordinates` | :eight_spoked_asterisk: |  The output cell coordinate type (if set to `'world'`, coordinates will be scaled with the voxel dimensions (µm), otherwise the coordinates will be given in image positions (voxel coordinates) |
+| `VoxelDimensions` | :eight_spoked_asterisk: | Voxel dimensions in X, Y, Z. Provide in list `[x, y, z]` or **(Imaris only)** set to `auto` to automatically retrieve the voxel dimensions from the Imaris image file |
+| `OutputCSV` | :eight_spoked_asterisk: | Set to `True` for output array to be exported as `.csv` format (as multiple 2D data arrays) as well. |
 | | | | 
 | `TempDir` |  | Temporary directory where intermediate files are generated. Cleaned up automatically if the script runs to completion. |
 | | | | 
@@ -33,10 +33,10 @@
 | DASK | | | 
 | `cluster_mode` |  | Currently only `SLURM` is supported. |
 | TASKS |  | The SLURM job requests can be further customized for each task |
-| `cluster_size` | :red_circle: | The number of nodes to request |
-| `cores` | :red_circle: | CPUs per node |
+| `cluster_size` | :eight_spoked_asterisk: | The number of nodes to request |
+| `cores` | :eight_spoked_asterisk: | CPUs per node |
 | `processes` |  |  Number of worker (set to 1) |
-| `memory` | :red_circle: |  Memory per node |
-| `walltime` | :red_circle: | Wall time for each node |
-| `cpu_type` | :red_circle: |  `nodetype` specified by the `--constraint` argument |
+| `memory` | :eight_spoked_asterisk: |  Memory per node |
+| `walltime` | :eight_spoked_asterisk: | Wall time for each node |
+| `cpu_type` | :eight_spoked_asterisk: |  `nodetype` specified by the `--constraint` argument |
   
