@@ -126,3 +126,22 @@ def get_extents(f, future_batch, tile_labels, config):
                 
     return f, extents
 
+
+def get_coordinates(extents, config):
+    
+    coords = np.zeros((len(extents), 3), dtype=float)
+    
+    for n in range(3):
+        coords[:,n] = (extents[:,(n*2)+1] - extents[:,n*2]) / 2
+        
+    return coords
+
+
+    
+    
+    
+    
+    
+    
+    
+    

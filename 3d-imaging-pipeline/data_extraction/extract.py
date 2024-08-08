@@ -20,6 +20,47 @@ from mask_func import func_multiply, mask_functions
 from tiling import read_coords_tile
 from .utils.cluster_setup import create_cluster
 
+def get_channel_names(img_path, channels):
+    cch = [ x for y in channels for x in y] ## channels from each image
+    cimg = [ [i] * len(x) for i, x in enumerate(channels)]
+    cimg = [ x for y in cimg for x in y ]  ## image_id from each image
+    
+    ch_names = [None] * len(cimg)
+    
+    for img_idx in range(len(channels)):
+        with h5py.File(img_path[img_idx], 'r') as img_file:
+            for c, ch in enumerate(cch):
+                if cimg[c] == img_idx: 
+                    ch_name = img_file[f'DataSetInfo/Channel {ch}'].attrs['Name']
+                    ch_name = [ str(s, encoding='UTF-8') for s in ch_name ]
+                    ch_names[c] = ''.join(ch_name)
+                    
+    return ch_names
+
+
+def get_dimensions(img_path):
+    
+    dims = ['Z', 'Y', 'X']
+    
+    img_dimension = np.zeros((3), dtype=int)
+    vxl_dimension = np.zeros((3), dtype=float)
+    with h5py.File(img_path[0], 'r') as img_file:
+        for n, dim in enumerate(dims):
+            cur_dim = img_file[f'DataSetInfo/Image'].attrs[f'{dim}']
+            cur_dim = ''.join(str(s, encoding='UTF-8') for s in cur_dim)
+            img_dimension[n] = int(cur_dim)
+        
+            cur_vxl_max = img_file[f'DataSetInfo/Image'].attrs[f'ExtMax{2-n}']
+            cur_vxl_max = ''.join(str(s, encoding='UTF-8') for s in cur_vxl_max)
+            
+            cur_vxl_min = img_file[f'DataSetInfo/Image'].attrs[f'ExtMin{2-n}']
+            cur_vxl_min = ''.join(str(s, encoding='UTF-8') for s in cur_vxl_min)
+            
+            vxl_dimension[n] = (float(cur_vxl_max) - float(cur_vxl_min)) / float(cur_dim)
+        
+    return img_dimension, vxl_dimension
+
+
 def extract_values(ch, mask, batch_size, block_size):
 
     patch_id = np.arange(batch_size)
@@ -67,13 +108,13 @@ def extract_contexts_filtered(f, future_rows, patch_params, filter_id, tile_labe
     
     block_size = patch_params['block_size']
     offsets = patch_params['offsets']
-
+    
+    
     ## get channel numbers from each image
     block_ch = list(np.arange(len([ x for y in channels for x in y])))  ## channel id for contexts_block
     cch = [ x for y in channels for x in y] ## channels from each image
     cimg = [ [i] * len(x) for i, x in enumerate(channels)]
     cimg = [ x for y in cimg for x in y ]  ## image_id from each image
-    
 
     radial_params = None
     
@@ -135,7 +176,7 @@ def extract_contexts_filtered(f, future_rows, patch_params, filter_id, tile_labe
                     for c, ch in enumerate(cch):
                         if cimg[c] == img_idx:
                             img = img_file[f'DataSet/ResolutionLevel 0/TimePoint 0/Channel {ch}/Data']
-                        
+                            
                             temp_image = img[coords_origin[0]:coords_end[0],
                                              coords_origin[1]:coords_end[1],
                                              coords_origin[2]:coords_end[2]]
@@ -147,6 +188,8 @@ def extract_contexts_filtered(f, future_rows, patch_params, filter_id, tile_labe
                             temp_image = np.pad(temp_image, temp_pads)
                         
                             contexts_block[block_ch[c], :, :, block_size[2]*i:block_size[2]*(i+1)] = temp_image[...]
+                            
+                            
                         
     ### generate masks
     masks_block = mask_functions(f, block_size, masks_block, footprints=[mask_dilation, mask_erosion])
@@ -194,11 +237,20 @@ def process_tiles_and_get_values(tile_labels, max_labels, patch_params, config):
     input_dir = os.path.join(config['ProjectPath'],config['InputDir'])
     img_path = [ f'{input_dir}/{x}' for x in ims_path ]
     
+    
+    
 
     cell_id = np.arange(max_labels)    
     context_channels = config['Channels']
      
     block_ch = list(np.arange(len([ x for y in context_channels for x in y])))
+    
+    #### get image dimensions and voxel dimensions
+    img_dimensions, vxl_dimensions = get_dimensions(img_path)
+    
+    ### get channel names
+    ch_names = get_channel_names(img_path, context_channels)
+    
     
     print(f'Image path: {img_path}')
     print(f'Channels to process: {context_channels}')
@@ -269,5 +321,5 @@ def process_tiles_and_get_values(tile_labels, max_labels, patch_params, config):
 
     client.shutdown()
     
-    return extracted_arr
+    return extracted_arr, [img_dimensions, vxl_dimensions, ch_names]
     
