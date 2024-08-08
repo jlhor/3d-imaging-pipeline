@@ -5,10 +5,15 @@ InputDir: "input"
 InputImage: [ "Image1a.ims", "Image1b.ims" ]
 Channels: [[0, 1, 2, 3, 4, 5, 6],[0,1,2]]
 
+ChannelNames: 'auto'
+
 PredictionFileName: 'M1_prediction.h5'
 
 OutputDir: "output"
-OutputFile: "M1_output_array.h5"
+OutputFilePrefix: "M1_output_array"
+
+CellCoordinates: 'world'
+OutputCSV: False
 
 TempDir: "temp"
 

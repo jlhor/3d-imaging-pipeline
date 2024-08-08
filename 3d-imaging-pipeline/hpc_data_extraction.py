@@ -8,6 +8,7 @@ Created on Sun May 12 21:11:18 2024
 import sys
 import os
 import numpy as np
+import pandas as pd
 
 import h5py
 
@@ -19,7 +20,7 @@ import math
 import ctypes
 
 from data_extraction.tiling import coords_tiling
-from data_extraction.extents import get_extents_setup
+from data_extraction.extents import get_extents_setup, get_coordinates
 from data_extraction.extract import process_tiles_and_get_values
 
 
@@ -61,6 +62,7 @@ def initialization(config):
                    'block_xy'    : block_xy,
                    'batch_shape' : batch_shape,
                    'block_size'  : block_size}
+    
     
     return init_params
 
@@ -146,6 +148,8 @@ def run(config_path):
     else:
         extents_full = np.load(f'{temp_dir}/extents.npy')
     
+    
+    cell_coords = get_coordinates(extents_full, config)
 
     ###################################################
     
@@ -153,20 +157,47 @@ def run(config_path):
     
     patch_params = get_patch_info(extents_full, max_labels)
     
-    extracted_array = process_tiles_and_get_values(tile_labels, max_labels, patch_params, config)
+    extracted_array, metadata = process_tiles_and_get_values(tile_labels, max_labels, patch_params, config)
     
-    out_filename = config['OutputFile']
+    img_dims, vxl_dims, ch_names = metadata
     
-    output_path = f'{output_dir}/{out_filename}'
+
+    output_prefix = config['OutputFilePrefix']
+    return_csv = config['OutputCSV']
+    coords_type = config['CellCoordinates']
+    
+    output_path = f'{output_dir}/{output_prefix}'
     
     print('Converting data to h5')
     print(f'Output location: {output_path}')
     
-    chunk_rows=5000
+    layers = ['nuclear', 'cell', 'eroded', 'membrane']  
+    
+    ## set attributes with h5py
     with h5py.File(output_path, mode='w') as f:
-        ds_dist = f.create_dataset("extracted_data", shape=extracted_array.shape, chunks=(extracted_array.shape[0], chunk_rows, extracted_array.shape[2]), dtype=extracted_array.dtype)
-        ds_dist[...] = extracted_array[...]
+        f.create_group('Info')
+        f['Info'].attrs['Image Dimensions'] = img_dims
+        f['Info'].attrs['Voxel Dimensions'] = vxl_dims
+        f['Info'].attrs['Channel Names'] = ch_names
+        
+    ## export individual layers
+    for i, layer in enumerate(layers):
+        pd_arr = pd.DataFrame(extracted_array[i], columns=ch_names)
+        pd_arr.to_hdf(f'{output_path}.h5', key=layer, mode='a')
+        
+        if return_csv:
+            pd_arr.to_csv(f'{output_path}_{layer}.csv')
 
+    ## export coordinates
+    if coords_type == 'world':
+        cell_coords *= vxl_dims
+    
+    coords_arr = pd.DataFrame(cell_coords, columns=['Z', 'Y', 'X'])
+    coords_arr.to_hdf(f'{output_path}.h5', key='positions', mode='a')
+    if return_csv:
+        coords_arr.to_csv(f'{output_path}_positions.csv')
+        
+    
     print('Removing temporary files')
     temp_dir.cleanup()
     
