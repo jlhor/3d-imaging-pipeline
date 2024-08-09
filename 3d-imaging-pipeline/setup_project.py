@@ -35,8 +35,8 @@ def run(project_name):
         d.mkdir()
     
     print('Generating configuration files')
-    out_seg_cfg = config_path / Path(f'segmentation_{project_name}.yaml')
-    out_ext_cfg = config_path / Path(f'extraction_{project_name}.yaml')
+    out_seg_cfg = project_dir / Path(f'segmentation_{project_name}.yaml')
+    out_ext_cfg = project_dir / Path(f'extraction_{project_name}.yaml')
     
     yaml_obj = YAML()
     seg_cfg = yaml_obj.load(config_path / Path("hpc_prediction_template.yaml"))
@@ -48,6 +48,7 @@ def run(project_name):
     seg_cfg['ModelName'] = f'{project_name}'
     
     yaml_obj.default_flow_style = False
+    yaml_obj.preserve_quotes = True
     yaml_obj.indent(mapping=4)
     yaml_obj.dump(seg_cfg, out_seg_cfg)
 
@@ -59,13 +60,14 @@ def run(project_name):
     ext_cfg['OutputFilePrefix'] = f'{project_name}_output_array'
     
     yaml_obj.default_flow_style = False
+    yaml_obj.preserve_quotes = True
     yaml_obj.indent(mapping=4)
     yaml_obj.dump(ext_cfg, out_ext_cfg)
                   
     print('Generating scripts')
  
-    sh_seg_path = project_dir / Path(f'script_segmentation_{project_name}.sh')
-    sh_ext_path = project_dir / Path(f'script_extraction_{project_name}.sh')
+    sh_seg_path = root_path / Path(f'script_segmentation_{project_name}.sh')
+    sh_ext_path = root_path / Path(f'script_extraction_{project_name}.sh')
     
     with open(sh_seg_path, 'w') as rsh:
         rsh.write(
