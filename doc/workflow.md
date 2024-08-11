@@ -6,7 +6,7 @@ The primary workflow consists of three separate steps:
 2. [Segmentation with Stardist3D](#segmentation-with-stardist3d)
 3. [Signel cell data extraction](#single-cell-data-extraction)
 
-*For a step-by-step walkthrough of a demo dataset, follow the instructions [here](doc/demo_instructions.md)*
+*For a step-by-step walkthrough of a demo dataset, follow the instructions [here](https://github.com/jlhor/3d-imaging-pipeline/blob/main/doc/demo_instructions.md)*
 
 ## Setup project
 
