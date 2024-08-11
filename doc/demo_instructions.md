@@ -62,7 +62,13 @@ Also modify the `DASK` section as needed, especially the `gpu_type` and `cpu_typ
 5. Execute the command `sbatch script_extraction_mouse_LN_demo.sh` to start a Slurm job on the HPC.
 6. Wait until completion of the script.
 
+The *expected* runtime for the both segmentation and data extraction for this demo dataset is dependent on the number of resources requested and granted on the HPC cluster, and under our test conditions, took ~6- minutes. Note that processing for significantly larger dataset is also scaled by a corresponding increase in the number of compute nodes requested, which exponentially decrease the runtime (~24 hours) compared that expected from a single workstation (several days to 1-2 weeks).
+
+### Output
+
 The output array `LN_demo.h5` as well as the individual `.csv` layers will be generated in the `output` sub-directory. 
+
+Detailed description of the output files are described [here](https://github.com/jlhor/3d-imaging-pipeline-dev/blob/main/doc/workflow.md#output-array).
 
 
 
