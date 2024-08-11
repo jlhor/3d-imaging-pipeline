@@ -1,17 +1,31 @@
 # 3D Image Processing and Analysis Pipeline
 
-<img src="./doc/3d_pipeline_front.png" width="75%" height="75%"/>
+https://github.com/user-attachments/assets/8b3f1c21-825f-4c91-abda-081dcaa4e244
 
-This pipeline leverages the NIH Biowulf High-Performing Computation (HPC) cluster for distributed processing of large volumetric 3D imaging datasets. The current workflow is optimized for SLURM-based scheduling system, with effort in porting to cloud-based service (e.g. Amazon AWS) currently ongoing.
+This workflow comprises Python-based scripts that leverage High-Performance Computing (HPC) cluster to enable distributed processing of large volumetric 3D imaging datasets, including 3D cell segmentation and single-cell channel intensity extraction. The current pipeline is optimized for SLURM-based scheduling system, with efforts to support its use in cloud-based service (e.g., Amazon AWS) currently ongoing.
 
 ## Requirements:
 
-This workflow requires a Conda-based virtual environment and utilizes the following packages: `dask distributed`, `dask-jobqueue` for HPC-based distributed processing, and `h5py`, `zarr` for parallel read/write access.
+> [!IMPORTANT]
+> This workflow is intended to be installed and executed on the HPC cluster for parallel processing of large imaging datasets. It has been configured and optimized for the NIH Biowulf HPC cluster with a Slurm-based batch scheduling system. HPC systems that utilize other types of scheduler should be compatible with slight modifications to the code base. *Support for cloud-based service (e.g., Amazon AWS) is currently under development.*
 
-The current supported image format is Imaris file (`.ims`), with limited support for TIFF images (`.tif`).
+> [!IMPORTANT]
+> This workflow has been optimized for use with the HDF5-based Imaris file format (`.ims`) for parallel reading of the imaging dataset by multiple compute nodes. A licensed version of Bitplane Imaris is not required. Image dataset can be converted to the `.ims` format using the free [Imaris File Converter](https://imaris.oxinst.com/microscopy-imaging-software-free-trial#file-converter) tool. *Support for OME-TIFF/Zarr formats will be made available in the near future.*
 
-Cell segmentation module additionally requires the installation of [StarDist](https://github.com/stardist/stardist) package, preferably with GPU support enabled to accelerate prediction step. The subsequent CPU-intensive non-maximal suppression and labeling steps have been modified to be executed on the HPC cluster.
+This package requires a Conda virtual environment to be installed on the HPC cluster (see *Installation* guide below). The development version has been tested on the *Rocky Linux 8.7 (Green Obsidian)* OS (kernel version: Linux 4.18.0-425.19.2) running on the NIH Biowulf HPC cluster.
 
-**Instructions for [Segmentation](doc/segmentation_tutorial.md) steps**   
-**Instructions for [Data Extraction](doc/data_extraction_tutorial.md) step**
+The [*Stardist*](https://github.com/stardist/stardist) segmentation module additionally requires access to GPU nodes on the HPC to accelerate the prediction step.
+
+## Installation 
+
+Please follow the [Installation Guide](doc/installation.md) for setting up a Conda environment on the HPC as well as the associated Python dependencies.
+
+## Code execution
+
+The [Workflow](doc/workflow.md) of `3d-imaging-pipeline` and the detailed instructions for the execution of each step.
+
+*For a step-by-step walkthrough of a demo dataset, follow the instructions [here](doc/demo_instructions.md)*
+
+## License
+This project is covered under the MIT License.
 

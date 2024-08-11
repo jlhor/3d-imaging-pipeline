@@ -1,0 +1,54 @@
+
+
+ProjectName : "Image01"
+ProjectPath: "/data/Image01"
+InputDir: "input"
+InputImage: "Image01.ims"
+InputChannel: 0
+ProbabilitiesFileName: "M1_probabilities.h5"
+
+OutputDir: "output"
+PredictionFileName: "M1_prediction.h5"
+TempDir: "temp"
+
+ModelDir: "models"
+ModelName: "model_P1"
+
+RunPrediction: True
+Preprocess: True
+RunNMS: True
+PreprocessBatchSize: 500
+NMSBatchSize: 10
+LabelingBatchSize: 1000
+PredictionBlockShape: [72, 256, 256]
+BlockShape: [0, 128, 128]
+ZarrChunks: [0, 256, 256]    
+
+
+DASK:
+    cluster_mode: 'SLURM'
+    
+    Prediction:
+        cluster_size: 1
+        cores: 28
+        processes: 1
+        memory: '120GB'
+        walltime: '2:00:00'
+        gpu_type: 'v100'
+        
+    
+    NMS:
+        cluster_size: 36
+        cores: 14
+        processes: 1
+        memory: '32GB'
+        walltime: '24:00:00'
+        cpu_type: 'x2695'
+        
+    Labeling:
+        cluster_size: 16
+        cores: 14
+        processes: 1
+        memory: '32GB'
+        walltime: '24:00:00'
+        cpu_type: 'x2695'
