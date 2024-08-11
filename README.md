@@ -22,7 +22,7 @@ Please follow the [Installation Guide](doc/installation.md) for setting up a Con
 
 ## Code execution
 
-The [Workflow](doc/workflow.md) of `3d-imaging-pipeline` and the detailed instructions for the execution of each step.
+See the [Workflow](doc/workflow.md) of `3d-imaging-pipeline` and the detailed instructions for the execution of each step.
 
 *For a step-by-step walkthrough of a demo dataset, follow the instructions [here](doc/demo_instructions.md)*
 
