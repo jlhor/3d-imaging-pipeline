@@ -24,7 +24,7 @@ A new project directory will be generated from the above step, comprising the fo
    |- Projects
       |- <new_project_name>
          |- input            <- copy image file(s) here
-         |- output           <- output will be generated here
+         |- output           <- output files will be generated here
          |- models           <- copy custom Stardist model specific for the project here
          |- temp             <- temporary/intermediate files will be created here.
                                 (Automatically cleaned up upon completion.)
