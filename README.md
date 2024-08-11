@@ -12,7 +12,8 @@ This workflow comprises Python-based scripts that leverage High-Performance Comp
 > [!IMPORTANT]
 > This workflow has been optimized for use with the HDF5-based Imaris file format (`.ims`) for parallel reading of image files by multiple compute nodes. A licensed version of Bitplane Imaris is not required. Image dataset can be converted to the `.ims` format using the free [Imaris File Converter](https://imaris.oxinst.com/microscopy-imaging-software-free-trial#file-converter) tool. *Support for OME-TIFF/Zarr formats will be made available in the near future.*
 
-This package requires a Conda virtual environment to be installed on the HPC cluster (see *Installation* guide below). The development version has been tested on the *Rocky Linux 8.7 (Green Obsidian)* OS (kernel version: Linux 4.18.0-425.19.2) running on the NIH Biowulf HPC cluster.
+This package requires a Conda virtual environment to be installed on the HPC cluster (see *Installation* guide below).   
+The development version of `3d-imaging-pipeline` has been tested on the *Rocky Linux 8.7 (Green Obsidian)* OS (kernel version: Linux 4.18.0-425.19.2) running on the NIH Biowulf HPC cluster.
 
 The [*Stardist*](https://github.com/stardist/stardist) segmentation module additionally requires access to GPU nodes on the HPC to accelerate the prediction step.
 
