@@ -1,6 +1,9 @@
 # 3D Image Processing and Analysis Pipeline
 
-https://github.com/user-attachments/assets/8b3f1c21-825f-4c91-abda-081dcaa4e244
+![](/doc/3d_pipeline_front.png)
+<!--
+ https://github.com/user-attachments/assets/8b3f1c21-825f-4c91-abda-081dcaa4e244
+-->
 
 This workflow comprises Python-based scripts that leverage High-Performance Computing (HPC) cluster to enable distributed processing of large volumetric 3D imaging datasets, including 3D cell segmentation and single-cell channel intensity extraction. The current pipeline is optimized for SLURM-based scheduling system, with efforts to support its use in cloud-based service (e.g., Amazon AWS) currently ongoing.
 
