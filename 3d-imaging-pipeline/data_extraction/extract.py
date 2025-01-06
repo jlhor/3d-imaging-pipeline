@@ -210,8 +210,8 @@ def extract_contexts_filtered(f, future_rows, patch_params, filter_id, tile_labe
         for b in range(masks_block.shape[0]):
             for z in range(masks_block.shape[1]):
                 masks_block_gaus[b, z, ...] = gaussian(masks_block[b][z], sigma=mask_sigma)
-        else:
-            masks_block_gaus = masks_block
+    else:
+        masks_block_gaus = masks_block
     
     
     mask_channels = np.arange(masks_block_gaus.shape[0])
