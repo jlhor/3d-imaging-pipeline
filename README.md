@@ -30,6 +30,10 @@ See the [Workflow](doc/workflow.md) of `3d-imaging-pipeline` and the detailed in
 
 *For a step-by-step walkthrough of a demo dataset, follow the instructions [here](doc/demo_instructions.md)*
 
+## Cellpose support
+
+A Cellpose version of the pipeline is also available [here](https://github.com/jlhor/3d-imaging-pipeline-cellpose). However, we strongly recommend that you create a new Conda environment separate from the original Stardist environment to minimize dependencies incompatibility. Additionally, as the parallelization aspect of the Cellpose workflow is distinct from the Stardist workflow, both segmentation and data extraction steps are self-contained and should be run separately from the original workflow.
+
 ## License
 This project is covered under the MIT License.
 
